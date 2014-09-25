@@ -1,0 +1,10 @@
+{
+	"require": {
+		"armagetron/ladderlog-parser": "dev-master"
+	},
+    "autoload": {
+        "psr-0": {
+            "Parser": "src"
+        }
+    }
+}
