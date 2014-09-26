@@ -214,7 +214,7 @@ class Onslaught implements ParserInterface
             $y = mt_rand($y - $r, $y + $r);
 
             $player->respawn($x, $y, 0, -1);
-            $player->setProperty('respawns', $respawns--);
+            $player->setProperty('respawns', --$respawns);
 
             $color = $team->getProperty('color');
 
