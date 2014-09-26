@@ -192,9 +192,11 @@ class Onslaught implements ParserInterface
         $attack_name    = $this->team_attack->name;
 
         Command::consoleMessage(sprintf("%s%s", $defense_color, str_repeat('*', 40)));
-        Command::consoleMessage(sprintf("%s%s%s Defend! %s", $defense_color, str_repeat('*', 10), $defense_name, str_repeat('*', 10)));
+        Command::consoleMessage(sprintf("%s%s %s Defend! %s", $defense_color, str_repeat('*', 10), $defense_name, str_repeat('*', 11)));
+	Command::consoleMessage(sprintf("%s%s", $defense_color, str_repeat('*', 40)));
         Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
-        Command::consoleMessage(sprintf("%s%s%s Defend! %s", $attack_color, str_repeat('*', 10), $attack_name, str_repeat('*', 10)));
+        Command::consoleMessage(sprintf("%s%s %s Defend! %s", $attack_color, str_repeat('*', 10), $attack_name, str_repeat('*', 11)));
+	Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
     }
 
     protected function handleBonus()
