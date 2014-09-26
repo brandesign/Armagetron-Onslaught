@@ -30,6 +30,8 @@ class Onslaught implements ParserInterface
     protected $round_time   = 180;
     protected $bonus_time   = 60;
     protected $bonus_score  = 5;
+    protected $num_respawns = 0;
+    protected $spawn_radius = 50;
 
     /**
      * @param int $bonus_score
@@ -61,9 +63,35 @@ class Onslaught implements ParserInterface
         return $this;
     }
 
+    /**
+     * @param int $num_respawns
+     */
+    public function setNumRespawns( $num_respawns )
+    {
+        $this->num_respawns = $num_respawns;
+
+        return $this;
+    }
+
+    /**
+     * @param int $spawn_radius
+     */
+    public function setSpawnRadius( $spawn_radius )
+    {
+        $this->spawn_radius = $spawn_radius;
+
+        return $this;
+    }
+
     public function nextRound(Event $event)
     {
         $this->spawn_status = $this->conquered = false;
+
+        /* @var Player $player */
+        foreach( $event->getGameObjects()->getPlayers() as $player )
+        {
+            $player->setProperty('respawns', $this->num_respawns);
+        }
     }
 
     public function spawnPositionTeam(Event $event)
@@ -153,6 +181,47 @@ class Onslaught implements ParserInterface
         $this->conquered = true;
     }
 
+    public function deathFrag(Event $event)
+    {
+        $this->handleRespawn($event->player);
+    }
+
+    public function deathSuicide(Event $event)
+    {
+        $this->handleRespawn($event->player);
+    }
+
+    public function deathTeamkill(Event $event)
+    {
+        $this->handleRespawn($event->prey);
+    }
+
+    /**
+     * Helper methods
+     */
+
+    protected function handleRespawn(Player $player)
+    {
+        $respawns   = $player->getProperty('respawns');
+        $team       = $player->getTeam();
+
+        if( $respawns > 0 && $team )
+        {
+            $x = 250;
+            $y = 450;
+            $r = $this->spawn_radius;
+            $x = mt_rand($x - $r, $x + $r);
+            $y = mt_rand($y - $r, $y + $r);
+
+            $player->respawn($x, $y, 0, -1);
+            $player->setProperty('respawns', $respawns--);
+
+            $color = $team->getProperty('color');
+
+            Command::consoleMessage(sprintf("%s%s 0xffffffhas been respawned. 0x00ff00%s 0xffffffrespawns remaining.", $color, $player->getScreenName(), $respawns));
+        }
+    }
+
     protected function getTimeRemaining()
     {
         return $this->round_time - LadderLog::getInstance()->getGameTime();
@@ -193,10 +262,10 @@ class Onslaught implements ParserInterface
 
         Command::consoleMessage(sprintf("%s%s", $defense_color, str_repeat('*', 40)));
         Command::consoleMessage(sprintf("%s%s %s Defend! %s", $defense_color, str_repeat('*', 10), $defense_name, str_repeat('*', 11)));
-	Command::consoleMessage(sprintf("%s%s", $defense_color, str_repeat('*', 40)));
+        Command::consoleMessage(sprintf("%s%s", $defense_color, str_repeat('*', 40)));
         Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
         Command::consoleMessage(sprintf("%s%s %s Defend! %s", $attack_color, str_repeat('*', 10), $attack_name, str_repeat('*', 11)));
-	Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
+        Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
     }
 
     protected function handleBonus()
