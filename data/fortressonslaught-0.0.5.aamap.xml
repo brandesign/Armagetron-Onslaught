@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Resource SYSTEM "AATeam/map-0.2.8.0.dtd">
+<Resource category='fortress' version='0.0.5' type='aamap' name='fortressonslaught' author='ed'>
+  <Map version='2'>
+    <World>
+      <Field>
+        <Spawn y='50.0' x='255.0' ydir='1.0' xdir='0.0'/>
+        <Spawn y='450.0' x='245.0' ydir='-1.0' xdir='0.0'/>
+        <Wall>
+          <Point y='-200.0' x='0.0'/>
+          <Point y='400.0' x='0.0'/>
+          <Point y='600.0' x='250.0'/>
+          <Point y='400.0' x='500.0'/>
+          <Point y='-200.0' x='500.0'/>
+          <Point y='-200.0' x='0.0'/>
+        </Wall>
+      </Field>
+    </World>
+  </Map>
+</Resource>

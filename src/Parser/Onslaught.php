@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This parser is based on the original script by ed.
+ * http://plantpeanuts.co.uk/files/onslaught/onslaught_parser_0.0.4.php.txt
+ */
+
 namespace Parser;
 
 use Armagetron\Event\Event;
