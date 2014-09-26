@@ -32,9 +32,24 @@ class Onslaught implements ParserInterface
     protected $bonus_score  = 5;
     protected $num_respawns = 0;
     protected $spawn_radius = 50;
+    protected $die_messages = array();
+
+    public function __construct()
+    {
+        $this->team_defense = new Team('team_blue');
+        $this->team_defense->setProperty('color', '0x4488ff');
+        $this->team_defense->name = 'Team Blue';
+
+        $this->team_attack = new Team('team_gold');
+        $this->team_attack->setProperty('color', '0xffff44');
+        $this->team_attack->name = 'Team Gold';
+
+        LadderLog::getInstance()->getGameObjects()->add($this->team_defense)->add($this->team_attack);
+    }
 
     /**
      * @param int $bonus_score
+     * @return $this
      */
     public function setBonusScore( $bonus_score )
     {
@@ -45,6 +60,7 @@ class Onslaught implements ParserInterface
 
     /**
      * @param int $bonus_time
+     * @return $this
      */
     public function setBonusTime( $bonus_time )
     {
@@ -55,6 +71,7 @@ class Onslaught implements ParserInterface
 
     /**
      * @param int $round_time
+     * @return $this
      */
     public function setRoundTime( $round_time )
     {
@@ -65,6 +82,7 @@ class Onslaught implements ParserInterface
 
     /**
      * @param int $num_respawns
+     * @return $this
      */
     public function setNumRespawns( $num_respawns )
     {
@@ -75,10 +93,22 @@ class Onslaught implements ParserInterface
 
     /**
      * @param int $spawn_radius
+     * @return $this
      */
     public function setSpawnRadius( $spawn_radius )
     {
         $this->spawn_radius = $spawn_radius;
+
+        return $this;
+    }
+
+    /**
+     * @param array $messages
+     * @return $this
+     */
+    public function setDieMessages(array $messages)
+    {
+        $this->die_messages = $messages;
 
         return $this;
     }
@@ -220,6 +250,10 @@ class Onslaught implements ParserInterface
 
             Command::consoleMessage(sprintf("%s%s 0xffffffhas been respawned. 0x00ff00%s 0xffffffrespawns remaining.", $color, $player->getScreenName(), $respawns));
         }
+        else
+        {
+            $this->dieMessage($player);
+        }
     }
 
     protected function getTimeRemaining()
@@ -266,6 +300,20 @@ class Onslaught implements ParserInterface
         Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
         Command::consoleMessage(sprintf("%s%s %s Defend! %s", $attack_color, str_repeat('*', 10), $attack_name, str_repeat('*', 11)));
         Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
+    }
+
+    protected function dieMessage(Player $player)
+    {
+        if( empty($this->die_messages) )
+        {
+            $message = "died";
+        }
+        else
+        {
+            $message = $this->die_messages[array_rand($this->die_messages)];
+        }
+
+        Command::consoleMessage(sprintf("%s%s 0xffffff%s", $player->getTeam()->getProperty('color'), $player->getScreenName(), $message));
     }
 
     protected function handleBonus()
