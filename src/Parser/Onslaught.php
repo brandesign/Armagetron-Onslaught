@@ -183,7 +183,7 @@ class Onslaught implements ParserInterface
 
     public function deathFrag(Event $event)
     {
-        $this->handleRespawn($event->player);
+        $this->handleRespawn($event->prey);
     }
 
     public function deathSuicide(Event $event)
