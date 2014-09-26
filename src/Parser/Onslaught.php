@@ -54,6 +54,24 @@ class Onslaught implements ParserInterface
         }
     }
 
+    public function teamCreated(Event $event)
+    {
+        /* @var Team $team */
+        $team = $event->team;
+
+        switch( $team->getId() )
+        {
+            case 'team_blue':
+                $team->setProperty('color', '0x4488ff');
+                $team->name = 'Team Blue';
+                break;
+            case 'team_gold':
+                $team->setProperty('color', '0xffff44');
+                $team->name = 'Team Gold';
+                break;
+        }
+    }
+
     /**
      * PLAYER_GRIDPOS <player> <xpos> <ypos> <xdir> <ydir> <team>
      */
@@ -82,8 +100,7 @@ class Onslaught implements ParserInterface
 
             $this->spawn_status = true;
 
-            Command::consoleMessage(sprintf("Team %s defends", $this->team_defense->getId()));
-            Command::consoleMessage(sprintf("Team %s attacks", $this->team_attack->getId()));
+            $this->attackDefendMessage();
         }
 
         $this->timeMessage();
@@ -135,6 +152,19 @@ class Onslaught implements ParserInterface
         {
             Command::consoleMessage(sprintf("%d %s remaining.", $time, $unit));
         }
+    }
+
+    protected function attackDefendMessage()
+    {
+        $defense_color  = $this->team_defense->getProperty('color');
+        $defense_name   = $this->team_defense->name;
+        $attack_color   = $this->team_attack->getProperty('color');
+        $attack_name    = $this->team_attack->name;
+
+        Command::consoleMessage(sprintf("%s%s", $defense_color, str_repeat('*', 40)));
+        Command::consoleMessage(sprintf("%s%s%s Defend! %s", $defense_color, str_repeat('*', 10), $defense_name, str_repeat('*', 10)));
+        Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
+        Command::consoleMessage(sprintf("%s%s%s Defend! %s", $attack_color, str_repeat('*', 10), $attack_name, str_repeat('*', 10)));
     }
 
     protected function handleBonus()
