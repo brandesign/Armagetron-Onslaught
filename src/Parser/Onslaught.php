@@ -204,7 +204,7 @@ class Onslaught implements ParserInterface
         if( ! $this->conquered && $this->getTimeRemaining() % $this->bonus_time == 0 && LadderLog::getInstance()->getGameTime() >= $this->bonus_time )
         {
             $this->team_defense->addScore($this->bonus_score);
-            Command::consoleMessage(sprintf("%d bonus points awarded to %s", $this->bonus_score, $this->team_defense->getId()));
+            Command::consoleMessage(sprintf("%d bonus points awarded to %s%s", $this->bonus_score, $this->team_defense->getProperty('color'), $this->team_defense->name));
         }
     }
 }
