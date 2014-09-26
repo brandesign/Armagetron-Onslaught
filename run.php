@@ -3,7 +3,11 @@
 
 require "vendor/autoload.php";
 
-$parser = new Armagetron\Parser\StyCt(new \Parser\Onslaught());
+$onslaught = new \Parser\Onslaught();
+
+$onslaught->setRoundTime(180)->setBonusTime(60)->setBonusScore(5);
+
+$parser = new Armagetron\Parser\StyCt($onslaught);
 
 $parser->run();
 

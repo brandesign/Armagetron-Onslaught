@@ -31,6 +31,36 @@ class Onslaught implements ParserInterface
     protected $bonus_time   = 60;
     protected $bonus_score  = 5;
 
+    /**
+     * @param int $bonus_score
+     */
+    public function setBonusScore( $bonus_score )
+    {
+        $this->bonus_score = $bonus_score;
+
+        return $this;
+    }
+
+    /**
+     * @param int $bonus_time
+     */
+    public function setBonusTime( $bonus_time )
+    {
+        $this->bonus_time = $bonus_time;
+
+        return $this;
+    }
+
+    /**
+     * @param int $round_time
+     */
+    public function setRoundTime( $round_time )
+    {
+        $this->round_time = $round_time;
+
+        return $this;
+    }
+
     public function nextRound(Event $event)
     {
         $this->spawn_status = $this->conquered = false;
