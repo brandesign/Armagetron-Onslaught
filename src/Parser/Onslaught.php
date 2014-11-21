@@ -30,7 +30,7 @@ class Onslaught implements ParserInterface
     protected $round_time   = 180;
     protected $bonus_time   = 60;
     protected $bonus_score  = 5;
-    protected $num_respawns = 0;
+    protected $num_respawns = 1;
     protected $spawn_radius = 50;
     protected $die_messages = array();
 
@@ -298,7 +298,7 @@ class Onslaught implements ParserInterface
         Command::consoleMessage(sprintf("%s%s %s Defend! %s", $defense_color, str_repeat('*', 10), $defense_name, str_repeat('*', 11)));
         Command::consoleMessage(sprintf("%s%s", $defense_color, str_repeat('*', 40)));
         Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
-        Command::consoleMessage(sprintf("%s%s %s Defend! %s", $attack_color, str_repeat('*', 10), $attack_name, str_repeat('*', 11)));
+        Command::consoleMessage(sprintf("%s%s %s Attack! %s", $attack_color, str_repeat('*', 10), $attack_name, str_repeat('*', 11)));
         Command::consoleMessage(sprintf("%s%s", $attack_color, str_repeat('*', 40)));
     }
 
@@ -313,7 +313,16 @@ class Onslaught implements ParserInterface
             $message = $this->die_messages[array_rand($this->die_messages)];
         }
 
-        Command::consoleMessage(sprintf("%s%s 0xffffff%s", $player->getTeam()->getProperty('color'), $player->getScreenName(), $message));
+        if( $team = $player->getTeam() )
+        {
+            $color = $team->getProperty('color');
+        }
+        else
+        {
+            $color = '0xffffff';
+        }
+
+        Command::consoleMessage(sprintf("%s%s 0xffffff%s", $color, $player->getScreenName(), $message));
     }
 
     protected function handleBonus()
